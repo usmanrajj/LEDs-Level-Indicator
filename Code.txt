@@ -1,0 +1,29 @@
+/*
+Rajj Engineering
+Video Link :- https://youtu.be/nqORF7Tn4Mg
+Circuit :- https://github.com/usmanrajj/LEDs-Level-Indicator
+MPU6050 Library Link :- https://github.com/ElectronicCats/mpu6050
+*/
+#include <Wire.h>
+#include <MPU6050.h>    // Add This Library link is above 👆
+MPU6050 mympu;
+int ledPins[] = {2, 3, 4, 5, 6, 7, 8, 9, 10};
+void setup() {
+  Wire.begin();                   // initialize i2c protocols
+  mympu.initialize();             // initialize mpu6050
+  for (int i = 0; i < 9; i++) {
+    pinMode(ledPins[i], OUTPUT);  // set pins as ouput
+  }
+}
+void loop() {
+  int16_t ax, ay, az;                         // 16 bit data variables 
+  mympu.getAcceleration(&ax, &ay, &az);       //get data in addresses of vairavles
+  int ledIndex = map(ay, -16000, 16000, 0, 9);// map data to 0 to 8 total of 9
+  for (int i = 0; i < 9; i++) {
+    if (i == ledIndex) {
+      digitalWrite(ledPins[i], HIGH);
+    } else {
+      digitalWrite(ledPins[i], LOW);
+    }
+  }
+}
